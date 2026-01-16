@@ -1,0 +1,32 @@
+{
+  "name": "democratization-of-git",
+  "version": "0.1.0",
+  "description": "Electron + React + TypeScript workspace inspired by VS Code for git UI and shell access.",
+  "main": "dist/main/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "dev:web": "vite --config vite.renderer.config.ts --host 0.0.0.0 --port 5173",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "lint": "echo 'no lint configured'"
+  },
+  "dependencies": {
+    "node-pty": "^1.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "simple-git": "^3.25.0",
+    "xterm": "^5.3.0",
+    "xterm-addon-fit": "^0.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^32.2.1",
+    "electron-vite": "^2.3.0",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.10"
+  }
+}
