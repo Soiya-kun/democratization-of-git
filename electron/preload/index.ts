@@ -1,18 +1,25 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import type { AppCommand, DiffRequest, PreloadApi } from '../../shared/ipc'
 
-const api = {
-  gitStatus: () => ipcRenderer.invoke('git:status'),
-  gitDiff: (filePath: string) => ipcRenderer.invoke('git:diff', filePath),
-  createShell: (id: string) => ipcRenderer.invoke('shell:create', id),
-  sendShellInput: (payload: { id: string; data: string }) => ipcRenderer.invoke('shell:input', payload),
-  resizeShell: (payload: { id: string; cols: number; rows: number }) =>
-    ipcRenderer.invoke('shell:resize', payload),
-  closeShell: (id: string) => ipcRenderer.invoke('shell:close', id),
-  onShellData: (callback: (payload: { id: string; data: string }) => void) => {
-    ipcRenderer.on('shell:data', (_event, payload) => callback(payload))
+const api: PreloadApi = {
+  getState: () => ipcRenderer.invoke('app:get-state'),
+  selectFolder: () => ipcRenderer.invoke('app:select-folder'),
+  runCommand: (command: AppCommand) => ipcRenderer.invoke('app:command', command),
+  getDiff: (request: DiffRequest) => ipcRenderer.invoke('app:get-diff', request),
+  onWorkspaceChanged: (callback) => {
+    const listener = () => callback()
+    ipcRenderer.on('workspace:changed', listener)
+    return () => ipcRenderer.removeListener('workspace:changed', listener)
+  },
+  createTerminal: (id: string) => ipcRenderer.invoke('terminal:create', id),
+  sendTerminalInput: (payload) => ipcRenderer.invoke('terminal:input', payload),
+  resizeTerminal: (payload) => ipcRenderer.invoke('terminal:resize', payload),
+  closeTerminal: (id: string) => ipcRenderer.invoke('terminal:close', id),
+  onTerminalData: (callback) => {
+    const listener = (_event: Electron.IpcRendererEvent, payload: { id: string; data: string }) => callback(payload)
+    ipcRenderer.on('terminal:data', listener)
+    return () => ipcRenderer.removeListener('terminal:data', listener)
   }
 }
 
 contextBridge.exposeInMainWorld('api', api)
-
-export type Api = typeof api

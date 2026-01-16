@@ -14,5 +14,5 @@
     "allowSyntheticDefaultImports": true,
     "types": ["node"]
   },
-  "include": ["electron", "src", "electron.vite.config.ts", "vite.renderer.config.ts"]
+  "include": ["electron", "src", "shared", "electron.vite.config.ts", "vite.renderer.config.ts"]
 }
